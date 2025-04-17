@@ -6,8 +6,19 @@ openai.api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
 openai.project = "proj_Hdy6TsbuQQy0hictusNM4GAa"   
 MODEL = "gpt-4.1-mini"
 
+import time
+if "last_hit" in st.session_state and time.time() - st.session_state["last_hit"] < 10:
+    st.warning("Slow down — wait a few seconds.")
+    st.stop()
+st.session_state["last_hit"] = time.time()
+
 st.title("SignalScout – MVP")
 
+MASTER_PW = st.secrets.get("MASTER_PASSWORD", "changeme")
+
+pw = st.text_input("Password", type="password")
+if pw != MASTER_PW:
+    st.stop()
 industry = st.text_input("Industry (e.g. plumber)")
 location = st.text_input("City, State (e.g. Boston, MA)")
 

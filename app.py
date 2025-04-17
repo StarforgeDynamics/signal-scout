@@ -2,7 +2,8 @@ import streamlit as st, os, openai
 from dotenv import load_dotenv
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+openai.project = "proj_Hdy6TsbuQQy0hictusNM4GAa"   
 MODEL = "gpt-4.1-mini"
 
 st.title("SignalScout – MVP")

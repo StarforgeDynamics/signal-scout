@@ -73,9 +73,14 @@ JSON:"""
     )
     return json.loads(resp.choices[0].message.content)
 
-def row_to_pipe(d):
-    socials = ",".join(filter(None,[d["socials"].get(k,"") for k in ("fb","ig","li")]))
-    return f'{d["name"]}|{d["website"]}|{d["phone"]}|{d["email"]}|{socials}|{d["address"]}'
+def row_to_pipe(info, fallback):
+    name    = info.get("name")    or fallback["name"]
+    website = info.get("website") or fallback.get("website", "")
+    phone   = info.get("phone")   or fallback.get("formatted_phone_number", "")
+    email   = info.get("email", "")
+    socials = ",".join(filter(None, [info["socials"].get(k,"") for k in ("fb","ig","li")])) if info.get("socials") else ""
+    address = info.get("address") or fallback.get("vicinity", "")
+    return f"{name}|{website}|{phone}|{email}|{socials}|{address}"
 
 def rate_limit():
     if "last_hit" in st.session_state and time.time() - st.session_state["last_hit"] < 10:
@@ -92,7 +97,7 @@ if col1.button("Scout") and industry and location:
     for p in places:
         html = visible_text(p.get("website","")) if p.get("website") else ""
         info = enrich(p["name"], html or p.get("vicinity",""))
-        rows.append(row_to_pipe(info))
+        rows.append(row_to_pipe(info, p))
         st.session_state["seen"].append(p["name"])
     data = "\n".join(rows) if rows else "No results."
     st.text(data)

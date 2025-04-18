@@ -1,6 +1,6 @@
-streamlit>=1.34
-openai>=1.14
-python-dotenv>=1.0
+streamlit>=1.44
+openai>=1.75
+python-dotenv>=1.1
 requests>=2.32
-pip install googlemaps beautifulsoup4
+beautifulsoup4>=4.12
 googlemaps==4.10.0
